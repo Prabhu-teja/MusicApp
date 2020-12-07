@@ -1,0 +1,71 @@
+let musicPlayer=document.getElementById("musicPlayer");
+let volumeSlider=document.getElementById("volumeSlider");
+const musicList=["Music/grateful.mp3","Music/crazyFrog.mp3","Music/sd1.mp3","Music/sd2.mp3","Music/sd3.mp3","Music/sdbgm.mp3"]
+let colors=["bg-light","bg-dark","bg-primary","bg-secondary","bg-info","bg-success","bg-warning"];
+let musicIndex=0;
+musicPlayer.src=musicList[musicIndex];
+setInterval(()=>{
+    if(musicPlayer.currentTime===musicPlayer.duration){
+        document.getElementById("next").click();
+    }
+    document.getElementById("musicTime").value=(musicPlayer.currentTime/musicPlayer.duration)*100; 
+});
+document.getElementById("musicTime").addEventListener("input",()=>{
+    musicPlayer.currentTime=document.getElementById("musicTime").value*musicPlayer.duration/100;
+})
+document.getElementById("decreaseVolume").addEventListener("click",()=>{
+    if(parseInt(volumeSlider.value)>=20){
+        volumeSlider.value=parseInt(volumeSlider.value)-20;
+        musicPlayer.volume-=0.2;
+    }
+})
+document.getElementById("increaseVolume").addEventListener("click",()=>{
+    if(parseInt(volumeSlider.value)<=80){
+        volumeSlider.value=parseInt(volumeSlider.value)+20;
+        musicPlayer.volume+=0.2;
+    }
+})
+document.getElementById("loop").addEventListener("click",()=>{
+    if(musicPlayer.loop){
+        musicPlayer.loop=false;
+        document.getElementById("loop").style.backgroundColor="black";
+    }
+    else{
+        musicPlayer.loop=true;
+        document.getElementById("loop").style.backgroundColor="#28a745";
+    }
+})
+document.getElementById("prev").addEventListener("click",()=>{
+    if(musicIndex>0){
+        musicIndex-=1;
+    }
+    else{
+        musicIndex=musicList.length-1;
+    }
+    musicPlayer.src=musicList[musicIndex];
+    musicPlayer.play();
+});
+document.getElementById("next").addEventListener("click",()=>{
+    if(musicIndex<musicList.length-1){
+        musicIndex+=1;
+    }
+    else{
+        musicIndex=0;
+    }
+    musicPlayer.src=musicList[musicIndex];
+    musicPlayer.play();
+    document.getElementById("player").classList.value=`container border border-dark px-4 py-3 w-50 text-center mt-5 ${colors[parseInt(Math.random()*(colors.length-1))]}`;
+});
+volumeSlider.addEventListener("input",()=>{
+    musicPlayer.volume=volumeSlider.value/100;
+})
+document.getElementById("play").addEventListener("click",()=>{
+    musicPlayer.play();
+    document.getElementById("play").classList.add("hide");
+    document.getElementById("pause").classList.remove("hide");
+});
+document.getElementById("pause").addEventListener("click",()=>{
+    musicPlayer.pause();
+    document.getElementById("pause").classList.add("hide");
+    document.getElementById("play").classList.remove("hide");
+});
